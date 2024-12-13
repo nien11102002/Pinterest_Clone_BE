@@ -10,6 +10,9 @@ CREATE TABLE users(
 	password varchar(255),
 	age INT,
 	avatar VARCHAR(255),
+	introduction varchar(255),
+	web_link varchar(255),
+	display_name varchar(255),
 
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -21,6 +24,7 @@ CREATE TABLE images(
 	user_id int,
 	url VARCHAR(255),
 	description VARCHAR(255),
+	title VARCHAR(255),
 	
 	FOREIGN KEY (user_id) REFERENCES users(id),
 	
@@ -49,6 +53,7 @@ CREATE TABLE saved_images(
 	image_id INT NOT null,
 	save_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	
+	PRIMARY KEY (user_id, image_id),
 		FOREIGN KEY (user_id) REFERENCES users(id),
 	FOREIGN KEY (image_id) REFERENCES images(id),
 	
