@@ -20,8 +20,8 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto) {
-    const { email, pass_word } = loginDto;
-    console.log({ email, pass_word });
+    const { email, password } = loginDto;
+    console.log({ email, password });
 
     const userExists = await this.prisma.users.findFirst({
       where: {
@@ -37,7 +37,7 @@ export class AuthService {
 
     console.log({ userExists });
     const passHash = userExists.password;
-    const isPassword = bcrypt.compareSync(pass_word, passHash);
+    const isPassword = bcrypt.compareSync(password, passHash);
     if (!isPassword) throw new BadRequestException(`Mật khẩu không chính xác`);
 
     const tokens = this.createTokens(userExists);

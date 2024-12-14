@@ -6,5 +6,5 @@ export class LoginDto {
   @IsString()
   @IsEmail({}, { message: `Email is not validation` })
   email: string;
-  pass_word: string;
+  password: string;
 }
