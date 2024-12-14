@@ -67,6 +67,6 @@ export class SavedImagesController {
 
   @Delete(':image_id')
   async remove(@User() user: TUser, @Param(`image_id`) image_id: number) {
-    return await this.savedImagesService.remove(user, image_id);
+    return await this.savedImagesService.remove(user, +image_id);
   }
 }
