@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateSavedImageDto } from './dto/create-saved-image.dto';
 import { UpdateSavedImageDto } from './dto/update-saved-image.dto';
 
@@ -12,9 +16,10 @@ export class SavedImagesService {
 
   async create(user: TUser, image_id: number) {
     const user_id = user.id;
-    const savedImage = await this.prisma.saved_images.findUnique({
+    const savedImage = await this.prisma.saved_images.findFirst({
       where: {
-        user_id_image_id: { user_id, image_id },
+        user_id: user_id,
+        image_id: +image_id,
       },
     });
 
@@ -22,7 +27,7 @@ export class SavedImagesService {
       throw new ConflictException(`Already save the image ${image_id}`);
 
     const newSavedImage = await this.prisma.saved_images.create({
-      data: { user_id, image_id, save_date: new Date() },
+      data: { user_id, image_id: +image_id, save_date: new Date() },
     });
     return newSavedImage;
   }
@@ -53,6 +58,21 @@ export class SavedImagesService {
     };
   }
 
+  async isSavedImage(user: TUser, image_id: number) {
+    const imageExist = await this.prisma.saved_images.findFirst({
+      where: { image_id: +image_id },
+    });
+    if (!imageExist) throw new BadRequestException("Image doesn't exist");
+
+    const isSaved = await this.prisma.saved_images.findFirst({
+      where: {
+        image_id: +image_id,
+        user_id: user.id,
+      },
+    });
+    return { isSaved };
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} savedImage`;
   }
@@ -61,7 +81,23 @@ export class SavedImagesService {
     return `This action updates a #${id} savedImage`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} savedImage`;
+  async remove(user: TUser, image_id: number) {
+    const user_id = user.id;
+    const savedImage = await this.prisma.saved_images.findFirst({
+      where: {
+        user_id: user_id,
+        image_id: +image_id,
+      },
+    });
+
+    if (!savedImage)
+      throw new ConflictException(`The image ${image_id} has not been saved`);
+
+    await this.prisma.saved_images.delete({
+      where: {
+        user_id_image_id: { user_id, image_id },
+      },
+    });
+    return `Remove saved_image successfully`;
   }
 }

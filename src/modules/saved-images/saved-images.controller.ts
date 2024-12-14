@@ -22,8 +22,8 @@ export class SavedImagesController {
   constructor(private readonly savedImagesService: SavedImagesService) {}
 
   @Post(`:image_id`)
-  create(@User() user: TUser, @Param(`image_id`) image_id: number) {
-    return this.savedImagesService.create(user, image_id);
+  async create(@User() user: TUser, @Param(`image_id`) image_id: number) {
+    return await this.savedImagesService.create(user, image_id);
   }
 
   @Get(':user_id')
@@ -37,14 +37,19 @@ export class SavedImagesController {
     required: false,
     description: 'Number of items per page',
   })
-  findAll(
+  async findAll(
     @Param(`user_id`) user_id: number,
     @User() user: TUser,
     @Req() req: Request,
     @Query(`page`) page?: string,
     @Query(`pageSize`) pageSize?: string,
   ) {
-    return this.savedImagesService.findAll(user, +user_id, req);
+    return await this.savedImagesService.findAll(user, +user_id, req);
+  }
+
+  @Get('isSaved/:image_id')
+  async isSavedImage(@User() user: TUser, @Param(`image_id`) image_id: number) {
+    return await this.savedImagesService.isSavedImage(user, image_id);
   }
 
   @Get(':id')
@@ -60,8 +65,8 @@ export class SavedImagesController {
     return this.savedImagesService.update(+id, updateSavedImageDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.savedImagesService.remove(+id);
+  @Delete(':image_id')
+  async remove(@User() user: TUser, @Param(`image_id`) image_id: number) {
+    return await this.savedImagesService.remove(user, image_id);
   }
 }
