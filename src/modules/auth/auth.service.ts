@@ -21,7 +21,6 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    console.log({ email, password });
 
     const userExists = await this.prisma.users.findFirst({
       where: {
@@ -35,7 +34,6 @@ export class AuthService {
     if (!userExists)
       throw new BadRequestException('Email không tồn tại, vui lòng đăng ký');
 
-    console.log({ userExists });
     const passHash = userExists.password;
     const isPassword = bcrypt.compareSync(password, passHash);
     if (!isPassword) throw new BadRequestException(`Mật khẩu không chính xác`);
@@ -83,6 +81,14 @@ export class AuthService {
         full_name: full_name,
         password: hashPassword,
         age: age,
+      },
+      select: {
+        id: true,
+        full_name: true,
+        age: true,
+        introduction: true,
+        display_name: true,
+        web_link: true,
       },
     });
 

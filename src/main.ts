@@ -23,6 +23,7 @@ async function bootstrap() {
     .setTitle('Pinterest')
     .setDescription('The Pinterest API description')
     .setVersion('0.1')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

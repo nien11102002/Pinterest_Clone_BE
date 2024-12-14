@@ -23,6 +23,7 @@ CREATE TABLE images(
 	name VARCHAR(255) not NULL,
 	user_id int,
 	url VARCHAR(255),
+	link varchar(255),
 	description VARCHAR(255),
 	title VARCHAR(255),
 	
