@@ -1,6 +1,10 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class CreateImageDto {
-  user_id: number;
+  @ApiProperty()
   name: string;
-  url: string;
+  @ApiProperty()
   description: string;
+  @ApiProperty()
+  link: string;
 }
